@@ -1,24 +1,13 @@
+// Despendencies
+var bodyParser = require("body-parser");
 var express = require("express");
+
 var app = express();
 var PORT = process.env.PORT || 3000;
+var todos = []
+var todoNextId = 1;
 
-// Todo collection
-var todos = [{
-  id: 1,
-  description: "Meet mom for lunch",
-  completed: false
-},
-{
-  id: 2,
-  description: "Go to market",
-  completed: false
-},
-{
-  id: 3,
-  description: "Eat Chinese food.",
-  completed: true
-}];
-
+app.use(bodyParser.json());
 
 app.get("/", function (req, res) {
   res.send("Todo API ROOT");
@@ -47,6 +36,17 @@ app.get("/todos/:id", function (req, res) {
   }
 });
 
+// POST /todos
+app.post("/todos", function (req, res) {
+  var body = req.body;
+  //add id field
+  body.id = todoNextId;
+  todoNextId++;
+  // push body into array
+  todos.push(body);
+
+  res.json(body);
+});
 
 app.listen(PORT, function () {
   console.log("Express listening on port: " + PORT + ".");
