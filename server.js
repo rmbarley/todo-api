@@ -22,7 +22,7 @@ app.get("/todos", function (req, res) {
 // GET /todos/:id
 app.get("/todos/:id", function (req, res) {
   var todoId = parseInt(req.params.id, 10);
-  var matchedTodo = _.findWhere(todos, {id: todoId})
+  var matchedTodo = _.findWhere(todos, {id: todoId});
 
   if (matchedTodo) {
     res.json(matchedTodo);
@@ -48,6 +48,18 @@ app.post("/todos", function (req, res) {
   todos.push(body);
 
   res.json(body);
+});
+
+// Delete /todos/:id
+app.delete("/todos/:id", function (req, res) {
+  var todoId = parseInt(req.params.id, 10);
+  var matchedTodo = _.findWhere(todos, {id: todoId});
+  if (!matchedTodo) {
+    res.status(404).json({"error": "no item found with that id."});
+  } else {
+    todos = _.without(todos, matchedTodo);
+    res.send("Item was deleted successfully.");
+  }
 });
 
 app.listen(PORT, function () {
