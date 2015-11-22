@@ -14,9 +14,26 @@ app.get("/", function (req, res) {
   res.send("Todo API ROOT");
 });
 
-// GET /todos
+// GET /todos?completed=true&q=house
 app.get("/todos", function (req, res) {
-  res.json(todos);
+  var queryParams = req.query;
+  var filteredTodos = todos;
+
+  if (queryParams.hasOwnProperty("completed") && queryParams.completed === "true") {
+    filteredTodos = _.where(filteredTodos, {completed: true});
+  } else if (queryParams.hasOwnProperty("completed") && queryParams.completed === "false") {
+  filteredTodos = _.where(filteredTodos, {completed: false});
+  }
+
+  // q must exist and length must be > 0
+  // _.filter to use indexOf to find wuery parameter in description
+  if (queryParams.hasOwnProperty("q") && queryParams.q.length > 0) {
+    filteredTodos = _.filter(filteredTodos, function (todo) {
+      return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+    });
+  }
+
+  res.json(filteredTodos);
 });
 
 // GET /todos/:id
