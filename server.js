@@ -38,26 +38,6 @@ app.get("/todos", function(req, res) {
   }, function(e) {
     res.status(500).send();
   });
-  //var filteredTodos = todos;
-
-  // // ?completed=
-  // if (queryParams.hasOwnProperty("completed") && queryParams.completed === "true") {
-  //   filteredTodos = _.where(filteredTodos, {
-  //     completed: true
-  //   });
-  // } else if (queryParams.hasOwnProperty("completed") && queryParams.completed === "false") {
-  //   filteredTodos = _.where(filteredTodos, {
-  //     completed: false
-  //   });
-  // }
-  // // ?q=
-  // if (queryParams.hasOwnProperty("q") && queryParams.q.length > 0) {
-  //   filteredTodos = _.filter(filteredTodos, function(todo) {
-  //     return todo.description.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
-  //   });
-  // }
-
-  // res.json(filteredTodos);
 });
 
 // GET /todos/:id
