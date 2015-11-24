@@ -20,8 +20,8 @@ app.get("/todos", function(req, res) {
   var query = req.query;
   var where = {};
   // ?completed=
-  if(query.hasOwnProperty("completed") && query.completed === "true") {
-      where.completed = true;
+  if (query.hasOwnProperty("completed") && query.completed === "true") {
+    where.completed = true;
   } else if (query.hasOwnProperty("completed") && query.completed === "false") {
     where.completed = false;
   }
@@ -33,7 +33,9 @@ app.get("/todos", function(req, res) {
     };
   }
 
-  db.todo.findAll({where: where}).then(function(todos) {
+  db.todo.findAll({
+    where: where
+  }).then(function(todos) {
     res.json(todos);
   }, function(e) {
     res.status(500).send();
@@ -69,19 +71,25 @@ app.post("/todos", function(req, res) {
 
 // Delete /todos/:id
 app.delete("/todos/:id", function(req, res) {
-  var todoId = parseInt(req.params.id, 10);
-  var matchedTodo = _.findWhere(todos, {
-    id: todoId
-  });
 
-  if (!matchedTodo) {
-    res.status(404).json({
-      "error": "no item found with that id."
-    });
-  } else {
-    todos = _.without(todos, matchedTodo);
-    res.send("Item was deleted successfully.");
-  }
+
+  var todoId = parseInt(req.params.id, 10);
+
+  db.todo.destroy({
+    where: {
+      id: todoId
+    }
+  }).then(function(rowsDeleted) {
+    if (rowsDeleted === 0) {
+      res.status(404).json({
+        error: "No todo with id."
+      });
+    } else {
+      res.status(204).send();
+    }
+  }, function() {
+    res.status(500).send();
+  });
 });
 
 // PUT /todos/:id
